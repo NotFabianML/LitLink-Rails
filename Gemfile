@@ -29,11 +29,13 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-gem 'dynamoid'           # ORM para DynamoDB
-gem 'devise-jwt'         # Autenticación JWT
-gem 'devise'             # Autenticación JWT
-gem 'rack-cors'          # Manejo de CORS
-gem 'aws-sdk-dynamodb'   # SDK oficial de AWS
+gem "dynamoid"           # ORM para DynamoDB
+gem "devise-jwt"         # Autenticación JWT
+gem "devise"             # Autenticación JWT
+gem "devise-dynamoid"   # Adaptador para Devise y Dynamoid
+gem "httparty"           # Cliente HTTP
+gem "rack-cors"          # Manejo de CORS
+gem "aws-sdk-dynamodb"   # SDK oficial de AWS
 # Opcional: gem 'rack-cors'
 
 
@@ -41,7 +43,7 @@ gem 'aws-sdk-dynamodb'   # SDK oficial de AWS
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors" 
+# gem "rack-cors"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -53,5 +55,3 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 end
-
-

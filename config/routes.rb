@@ -1,10 +1,43 @@
+# Rails.application.routes.draw do
+#   devise_for :users
+#   namespace :api do
+#     namespace :v1 do
+#       # Autenticación
+#       post "/signup", to: "auth#signup"
+#       post "/login", to: "auth#login"
+
+#       # Preferencias
+#       resource :preferences, only: [ :show, :update ]
+
+#       # Libros
+#       get "/books/recommendations", to: "books#recommendations"
+#       get "/books/search", to: "books#search"
+
+#       # Interacciones
+#       resources :book_interactions, only: [ :index, :create ]
+#     end
+#   end
+# end
+
+
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :api do
+    namespace :v1 do
+      # Autenticación
+      post "/signup", to: "auth#signup"
+      post "/login", to: "auth#login"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+      # Recursos
+      resources :users, only: [ :index, :show, :create, :update, :destroy ]
+      resources :books, only: [ :index, :show, :create, :update, :destroy ]
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+      # Rutas adicionales
+      resource :preferences, only: [ :show, :update ]
+      resources :book_interactions, only: [ :index, :create ]
+      get "/recommendations", to: "books#recommendations"
+    end
+  end
+
+  # Health Check
+  get "/health", to: proc { [ 200, {}, [ "OK" ] ] }
 end
