@@ -30,13 +30,13 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 gem "dynamoid"           # ORM para DynamoDB
-gem "devise-jwt"         # Autenticación JWT
-gem "devise"             # Autenticación JWT
-gem "devise-dynamoid"   # Adaptador para Devise y Dynamoid
+gem "jwt"                # JWT
+gem "bcrypt", "~> 3.1.18" # Encriptación de contraseñas
+gem "dotenv", groups: [ :development, :test ] # Variables de entorno
 gem "httparty"           # Cliente HTTP
 gem "rack-cors"          # Manejo de CORS
 gem "aws-sdk-dynamodb"   # SDK oficial de AWS
-# Opcional: gem 'rack-cors'
+gem "activestorage", "~> 8.0"
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
