@@ -1,6 +1,13 @@
 require_relative "boot"
 
-require "rails/all"
+# require "rails/all"
+
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_model/railtie"
+# require "sprockets/railtie"
+require "active_storage/engine"
+require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -28,6 +35,8 @@ module LitlinkRor
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
     config.generators.orm = :dynamoid
   end
 end
