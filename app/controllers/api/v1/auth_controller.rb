@@ -1,65 +1,45 @@
-# module Api::V1
-#   class AuthController < ApplicationController
-#     include Devise::Controllers::Helpers
-
-#     skip_before_action only: [ :login, :signup ]
-
-#     def signup
-#       user = User.new(user_params)
-#       if user.save
-#         render json: { message: "Usuario creado exitosamente" }, status: :created
-#       else
-#         render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
-#       end
-#     end
-
-#     def login
-#       user = User.find_by(email: params[:email])
-#       if user&.valid_password?(params[:password])
-#         token = user.generate_jwt
-#         render json: { token: token }
-#       else
-#         render json: { error: "Credenciales inválidas" }, status: :unauthorized
-#       end
-#     end
-
-#     private
-
-#     def user_params
-#       params.require(:user).permit(:first_name, :last_name, :email, :password)
-#     end
-#   end
-# end
-
-
 module Api::V1
   class AuthController < ApplicationController
-    # Saltamos la autenticación para login y signup
-    # skip_before_action :authenticate_user!, only: [:login, :signup]
+    skip_before_action :authenticate_user!, only: [ :login, :signup ]
 
+    # POST /api/v1/auth/signup
     def signup
-      @user = User.new(user_params)
-      if @user.save
-        render json: { message: "Usuario creado exitosamente" }, status: :created
+       user = User.new(user_params)
+
+      if user.save
+        token = user.generate_jwt
+        render json: { token: token, user: user }, status: :created
       else
-        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: user.errors }, status: :unprocessable_entity
       end
     end
 
+    # POST /api/v1/auth/login
     def login
-      @user = User.find_by(email: params[:email])
-      if @user && @user.valid_password?(params[:password])
-        # Login "falso": solo verificamos que exista el usuario y la contraseña sea válida.
-        render json: { message: "Login exitoso", user: @user.as_json(only: [ :id, :first_name, :last_name, :email ]) }
+      # Acceder directamente a los parámetros raíz
+      email = params[:email]
+      password = params[:password]
+
+      unless email.present? && password.present?
+        return render json: { error: "Email y contraseña requeridos" }, status: :bad_request
+      end
+
+      user = User.find_by_email(email)
+
+      if user&.authenticate(password)
+        token = user.generate_jwt
+        render json: { token: token, user: user }
       else
-        render json: { error: "Credenciales inválidas" }, status: :unauthorized
+        render json: { error: "Invalid credentials" }, status: :unauthorized
       end
     end
 
     private
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password)
+      params.require(:auth).permit(
+        user: [ :first_name, :last_name, :email, :password ]
+      )[:user]
     end
   end
 end

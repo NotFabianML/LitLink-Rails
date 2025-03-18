@@ -1,26 +1,27 @@
 module Api::V1
   class BooksController < ApplicationController
-    before_action :authenticate_user!
-
-    def recommendations
-      # Lógica de recomendaciones (puedes implementar según preferencias)
-      recommended_books = BookRecommendationService.new(current_user).call
-      render json: recommended_books
-    end
-
     def search
-      books = OpenLibraryService.search(params[:query])
+      # Obtener preferencias del usuario desde DB
+      preferences = current_user.preference
+      books = OpenLibraryService.search_books({
+        favorite_books: preferences&.favorite_books,
+        favorite_authors: preferences&.favorite_authors,
+        favorite_genres: preferences&.favorite_genres
+      })
+
       render json: books
+    rescue => e
+      render json: { error: "Error buscando libros: #{e.message}" }, status: :internal_server_error
     end
 
-    private
+    # GET /api/v1/books/saved -> Libros guardados (swipe derecha)
+    def saved
+      saved_books = current_user.book_actions
+                       .where(swipe_action: "right")
+                       .map { |action| OpenLibraryService.get_book(action.book_id) }
+                       .compact  # Eliminar nulos si hay errores
 
-    def search_params
-      params.permit(
-        liked_books: [],
-        authors: [],
-        genres: []
-      ).to_h.symbolize_keys
+      render json: saved_books
     end
   end
 end
