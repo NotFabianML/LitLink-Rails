@@ -13,7 +13,7 @@ module Api::V1
     def show
       @user = User.find(params[:id])
       render json: @user
-    rescue Dynamoid::Errors::RecordNotFound
+    rescue Mongoid::Errors::RecordNotFound
       render json: { error: "Usuario no encontrado" }, status: :not_found
     end
 
@@ -36,7 +36,7 @@ module Api::V1
 
     def set_user
       @user = User.find(params[:id])
-    rescue Dynamoid::Errors::RecordNotFound
+    rescue Mongoid::Errors::RecordNotFound
       render json: { error: "User not found" }, status: :not_found
     end
 

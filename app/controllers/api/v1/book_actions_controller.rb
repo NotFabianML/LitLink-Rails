@@ -78,7 +78,7 @@ module Api::V1
 
     def set_book_action
       @book_action = BookAction.find(params[:id])
-    rescue Dynamoid::Errors::RecordNotFound
+    rescue Mongoid::Errors::RecordNotFound
       render json: { error: "Acción no encontrada" }, status: :not_found
     end
 

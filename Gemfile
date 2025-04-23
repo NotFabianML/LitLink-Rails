@@ -29,14 +29,16 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-gem "dynamoid"           # ORM para DynamoDB
+# gem "dynamoid"           # ORM para DynamoDB
+# gem "aws-sdk-dynamodb"   # SDK oficial de AWS
 gem "jwt"                # JWT
 gem "bcrypt", "~> 3.1.18" # Encriptación de contraseñas
 gem "dotenv", groups: [ :development, :test ] # Variables de entorno
 gem "httparty"           # Cliente HTTP
 gem "rack-cors"          # Manejo de CORS
-gem "aws-sdk-dynamodb"   # SDK oficial de AWS
 gem "activestorage", "~> 8.0"
+gem "mongoid"           # ODM para MongoDB
+# gem "bson_ext"
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
