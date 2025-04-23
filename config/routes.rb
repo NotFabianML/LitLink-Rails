@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       # Autenticación
       post "/auth/login", to: "auth#login"
       post "/auth/signup", to: "auth#signup"
+      get "/auth/me", to: "auth#me"  # Obtener información del usuario autenticado
 
       # Usuarios
       resources :users, except: [ :new, :edit ]
@@ -46,6 +47,7 @@ end
 # # Autenticación
 # POST   /api/v1/auth/signup
 # POST   /api/v1/auth/login
+# GET    /api/v1/auth/me
 
 # # Usuarios
 # GET    /api/v1/users
