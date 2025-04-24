@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "example.com", "localhost:3000", "localhost:3001", "localhost:8000"
+    origins "example.com", "localhost:3000", "localhost:3001", "localhost:8000", "litlink-cr.vercel.app"
 
     resource "*",
       headers: :any,
