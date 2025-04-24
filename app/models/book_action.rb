@@ -13,32 +13,8 @@ class BookAction
 
   SWIPE_ACTIONS = %w[left right].freeze
 
-  # Schema DynamoDB con índices críticos
-  # table name: :book_actions,
-  #       key: :id,
-  #       global_secondary_indexes: [
-  #         {
-  #           hash_key: :user_id,
-  #           range_key: :book_id,
-  #           name: "user_book_index",
-  #           projection: :all
-  #         },
-  #         {
-  #           hash_key: :user_id,
-  #           range_key: :interacted_at,
-  #           name: "user_interaction_timeline",
-  #           projection: :all
-  #         }
-  #       ]
-
-  # Campos
-  # field :user_id, :string
-  # field :book_id, :string
-  # field :status, :integer
-  # field :swipe_action, :string
-  # field :interacted_at, :datetime
-  # field :metadata, :raw
-  field :user_id, type: BSON::ObjectId
+ # Campos
+ field :user_id, type: BSON::ObjectId
   field :book_id, type: BSON::ObjectId
   field :status, type: Integer
   field :swipe_action, type: String
