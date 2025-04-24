@@ -1,16 +1,29 @@
 module Api::V1
   class PreferencesController < ApplicationController
-    before_action :set_preference, only: [:show, :update, :destroy]
+    before_action :authenticate_user!
+    before_action :load_preference, only: [ :show, :update, :destroy ]
 
-    # GET /api/v1/users/:user_id/preferences
+    # GET /api/v1/preference
     def show
-      render json: @preference
+      if @preference
+        render json: @preference
+      else
+        # Devuelve un objeto vacío de preferencias si aún no existe
+        render json: {
+          user_id:     current_user.id.to_s,
+          favorite_genres:  [],
+          favorite_authors: [],
+          favorite_books:   []
+        }
+      end
     end
 
-    # POST /api/v1/users/:user_id/preferences
+    # POST /api/v1/preference
     def create
-      @preference = Preference.new(preference_params.merge(user_id: params[:user_id]))
-      
+      # Si ya existe, devolvemos conflict
+      return render json: { error: "Ya existen preferencias" }, status: :conflict if @preference
+
+      @preference = Preference.new(preference_params.merge(user_id: current_user.id))
       if @preference.save
         render json: @preference, status: :created
       else
@@ -18,8 +31,12 @@ module Api::V1
       end
     end
 
-    # PATCH/PUT /api/v1/users/:user_id/preferences
+    # PATCH/PUT /api/v1/preference
     def update
+      unless @preference
+        return render json: { error: "No existe preferencia para actualizar" }, status: :not_found
+      end
+
       if @preference.update(preference_params)
         render json: @preference
       else
@@ -27,21 +44,29 @@ module Api::V1
       end
     end
 
-    # DELETE /api/v1/users/:user_id/preferences
+    # DELETE /api/v1/preference
     def destroy
+      unless @preference
+        return head :no_content
+      end
+
       @preference.destroy
       head :no_content
     end
 
     private
 
-    def set_preference
-      @preference = Preference.find_by(user_id: params[:user_id])
-      render json: { error: "Preference not found" }, status: :not_found unless @preference
+    # Carga la preferencia o deja @preference en nil en lugar de lanzar excepción
+    def load_preference
+      @preference = Preference.where(user_id: current_user.id).first
     end
 
     def preference_params
-      params.permit(favorite_genres: [], favorite_authors: [], favorite_books: [])
+      params.permit(
+        favorite_genres:  [],
+        favorite_authors: [],
+        favorite_books:   []
+      )
     end
   end
 end
