@@ -23,5 +23,17 @@ module Api::V1
 
       render json: saved_books
     end
+
+    def recommend
+      prefs = current_user.preference
+      books = OpenLibraryService.search_books(
+        favorite_books:   prefs&.favorite_books,
+        favorite_authors: prefs&.favorite_authors,
+        favorite_genres:  prefs&.favorite_genres
+      )
+      render json: books
+    rescue => e
+      render json: { error: "Error recommending books: #{e.message}" }, status: :internal_server_error
+    end
   end
 end
