@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       # Búsqueda de libros (OpenLibrary)
       get "/books/search", to: "books#search"
       get "/books/saved", to: "books#saved"
+      get "/books/recommend", to: "books#recommend"
     end
   end
 end
